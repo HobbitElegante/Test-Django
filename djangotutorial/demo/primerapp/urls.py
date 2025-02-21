@@ -7,4 +7,5 @@ urlpatterns = [
     path("todos/detalles/<int:id>", views.detalles, name="detalles"),
     path("testeo/", views.testeo, name = 'testeo'),
     path('visualiq/', views.visualiq, name = 'visualiq'),
+    path('contact/', views.Orb, name = 'contact'),
 ]

@@ -30,3 +30,6 @@ def testeo(request):
 
 def visualiq(request):
     return render(request, 'visualiq.html')
+
+def Orb(request):
+    return render(request, 'orb.html')
