@@ -1,0 +1,9 @@
+{% extends 'base.html' %} {% block content %}
+<h1>Detalle de {{todo.title}}</h1>
+
+<p> Nivel de prioridad: {{todo.priority}} </p>
+<p> Tarea designada desde: {{todo.joined_date}} </p>
+
+<p> Volver a <a href="/todos">Lista de pendientes</a><p>
+
+{%endblock%}
