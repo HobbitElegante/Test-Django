@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visual-IQ</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />
+
+    <style>
+        /* Fijar el menú superior */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000; /* Asegura que esté sobre otros elementos */
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Ajuste del body para que el menú no cubra el canvas */
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #f8f9fa;
+            padding-top: 60px; /* Ajuste para compensar el navbar fijo */
+        }
+
+        /* Centrar el canvas */
+        canvas {
+            border: 5px solid black;
+            background-color: white;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Menú de navegación fijo -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="/">Mi Django Primerapp</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item active">
+                    <a class="nav-link" href="/visualiq">Visual-IQ</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">About</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Contact</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Canvas del juego -->
+    <canvas width="400" height="400" id="game"></canvas>
+
+    <script>
+        var canvas = document.getElementById('game');
+        var context = canvas.getContext('2d');
+
+        var grid = 16;
+        var count = 0;
+
+        var snake = {
+            x: 160,
+            y: 160,
+            dx: grid,
+            dy: 0,
+            cells: [],
+            maxCells: 4
+        };
+
+        var apple = {
+            x: 320,
+            y: 320
+        };
+
+        function getRandomInt(min, max) {
+            return Math.floor(Math.random() * (max - min)) + min;
+        }
+
+        function loop() {
+            requestAnimationFrame(loop);
+
+            if (++count < 4) {
+                return;
+            }
+
+            count = 0;
+            context.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Dibujar borde negro
+            context.strokeStyle = "black";
+            context.lineWidth = 5;
+            context.strokeRect(0, 0, canvas.width, canvas.height);
+
+            snake.x += snake.dx;
+            snake.y += snake.dy;
+
+            if (snake.x < 0) snake.x = canvas.width - grid;
+            else if (snake.x >= canvas.width) snake.x = 0;
+
+            if (snake.y < 0) snake.y = canvas.height - grid;
+            else if (snake.y >= canvas.height) snake.y = 0;
+
+            snake.cells.unshift({ x: snake.x, y: snake.y });
+
+            if (snake.cells.length > snake.maxCells) {
+                snake.cells.pop();
+            }
+
+            // Dibujar la manzana
+            context.fillStyle = 'red';
+            context.fillRect(apple.x, apple.y, grid - 1, grid - 1);
+
+            // Dibujar la serpiente
+            context.fillStyle = 'green';
+            snake.cells.forEach(function (cell, index) {
+                context.fillRect(cell.x, cell.y, grid - 1, grid - 1);
+
+                if (cell.x === apple.x && cell.y === apple.y) {
+                    snake.maxCells++;
+                    apple.x = getRandomInt(0, 25) * grid;
+                    apple.y = getRandomInt(0, 25) * grid;
+                }
+
+                for (var i = index + 1; i < snake.cells.length; i++) {
+                    if (cell.x === snake.cells[i].x && cell.y === snake.cells[i].y) {
+                        snake.x = 160;
+                        snake.y = 160;
+                        snake.cells = [];
+                        snake.maxCells = 4;
+                        snake.dx = grid;
+                        snake.dy = 0;
+
+                        apple.x = getRandomInt(0, 25) * grid;
+                        apple.y = getRandomInt(0, 25) * grid;
+                    }
+                }
+            });
+        }
+
+        document.addEventListener('keydown', function (e) {
+            if (e.which === 37 && snake.dx === 0) {
+                snake.dx = -grid;
+                snake.dy = 0;
+            } else if (e.which === 38 && snake.dy === 0) {
+                snake.dy = -grid;
+                snake.dx = 0;
+            } else if (e.which === 39 && snake.dx === 0) {
+                snake.dx = grid;
+                snake.dy = 0;
+            } else if (e.which === 40 && snake.dy === 0) {
+                snake.dy = grid;
+                snake.dx = 0;
+            }
+        });
+
+        requestAnimationFrame(loop);
+    </script>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

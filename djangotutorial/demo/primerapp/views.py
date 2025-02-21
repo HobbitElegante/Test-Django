@@ -21,8 +21,12 @@ def detalles(request, id):
     return HttpResponse(template.render(context, request))
 
 def testeo(request):
+    misdatos = TodoItem.objects.all()
     template = loader.get_template('testeo.html')
     context = {
-        'frutas': ['Manzana', 'Pera', 'Naranja']
+        'misdatos': misdatos,
     }
     return HttpResponse(template.render(context, request))
+
+def visualiq(request):
+    return render(request, 'visualiq.html')

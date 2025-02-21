@@ -1,8 +1,20 @@
 {% extends 'base.html' %} {% block content %}
-{% for i in frutas %}
-<h1> {{i}} </h1>
-{% endfor %}
+<table border='1'>
 
-<h5> En views puedes ver cómo luce la variable frutas </h5>
+    <tr>
+        <th> ID </th>
+        <th> Pendiente </th>
+        <th> Prioridad </th>
+    </th>
+
+    {% for i in misdatos %}
+    <tr>
+        <td> {{i.id}} </td>
+        <td> {{i.title}} </td>
+        <td> {{i.priority}} </td>
+    </tr>
+    {% endfor %}
+
+<p> Esto corresponde a un test de crear una tabla. </p>
 
 {% endblock %}
